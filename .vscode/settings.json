@@ -2,5 +2,10 @@
   "angular.enable-strict-mode-prompt": false,
   "search.exclude": {
     "**/_solutions/**": true
+  },
+  "workbench.colorCustomizations": {
+    "activityBar.background": "#470870",
+    "titleBar.activeBackground": "#630B9D",
+    "titleBar.activeForeground": "#FCF8FF"
   }
 }
