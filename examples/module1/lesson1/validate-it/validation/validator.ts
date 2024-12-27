@@ -1,31 +1,22 @@
-export function validator(value: string) {
-  const isIntiger = (value: string) => {
-    return !isNaN(Number(value)) && Number.isInteger(Number(value));
-  };
+import {
+  MESSAGE_ERROR_VALID_INPUT,
+  MESSAGE_SUCCESS_VALID_INT,
+} from './messages';
+import { type NumericValidationMethod, isValidIntiger } from './methods';
 
-  const isLessThan = (value: string, max = 100) => {
-    return Number(value) < max;
-  };
-
-  const isGreaterThan = (value: string, min = 0) => {
-    return Number(value) > min;
-  };
-
-  const isEven = (value: string) => {
-    return Number(value) % 2 === 0;
-  };
-
-  const methods = [isIntiger, isLessThan, isGreaterThan, isEven];
-
-  if (!isIntiger(value)) {
-    return 'Invalid';
+export function validator(
+  input: string,
+  validators: NumericValidationMethod[]
+) {
+  if (!isValidIntiger(input)) {
+    return MESSAGE_ERROR_VALID_INPUT;
   }
 
-  const isValid = methods.every((method) => method(value));
+  const isValid = validators.every((validatorFn) => validatorFn(Number(input)));
 
   if (isValid) {
-    return 'Valid';
+    return MESSAGE_SUCCESS_VALID_INT;
   }
 
-  return 'Invalid';
+  return MESSAGE_ERROR_VALID_INPUT;
 }
