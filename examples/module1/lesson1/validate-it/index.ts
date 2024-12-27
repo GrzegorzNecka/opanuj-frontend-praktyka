@@ -2,13 +2,13 @@ import { NumericValidationMethods } from './validation/methods';
 import { validator } from './validation/validator';
 
 function main() {
-  const input: HTMLInputElement = document.querySelector('input')!;
+  const input: HTMLInputElement = document.querySelector('#input')!;
   const validateButton: HTMLElement =
-    document.getElementById('validateButton')!;
-  const clearButton: HTMLElement = document.getElementById('clearButton')!;
-  const result: HTMLElement = document.getElementById('result')!;
+    document.querySelector('#validation-btn')!;
+  const clearInputButton: HTMLElement = document.querySelector('#cleanup-btn')!;
+  const result: HTMLElement = document.querySelector('#result')!;
 
-  if (!input || !validateButton || !clearButton || !result) {
+  if (!input || !validateButton || !clearInputButton || !result) {
     console.error('One or more elements not found');
     return;
   }
@@ -18,7 +18,7 @@ function main() {
     result.innerHTML = validationMessage;
   });
 
-  clearButton.addEventListener('click', () => {
+  clearInputButton.addEventListener('click', () => {
     input.value = '';
     result.innerHTML = '';
   });
