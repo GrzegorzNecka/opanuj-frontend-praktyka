@@ -3,7 +3,7 @@ import { validate } from './validation/validator';
 
 // Only reference to view layer with DOM elements - could be replaced by one or many components
 function main() {
-  const input: HTMLInputElement = document.querySelector('input')!;
+  const input: HTMLInputElement = document.querySelector('#input')!;
   const validateButton: HTMLElement =
     document.querySelector('#validation-btn')!;
   const clearInputButton: HTMLElement = document.querySelector('#cleanup-btn')!;
