@@ -49,8 +49,8 @@ const App = () => {
           <Button
             onClick={() => {
               calculateResult(operation);
-              setFirstInput(0);
-              setSecondInput(0);
+              // setFirstInput(0);
+              // setSecondInput(0);
             }}
           >
             {operation.symbol}

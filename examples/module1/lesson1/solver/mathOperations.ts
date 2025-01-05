@@ -16,7 +16,7 @@ subtract.symbol = '-';
 export function multiply(factor1: number, factor2: number): CalculationResult {
   return { result: factor1 * factor2 };
 }
-multiply.symbol = '×';
+multiply.symbol = '*';
 
 export function divide(dividend: number, divisor: number): CalculationResult {
   return {
@@ -24,6 +24,6 @@ export function divide(dividend: number, divisor: number): CalculationResult {
     error: divisor === 0 ? 'Cannot divide by zero' : undefined,
   };
 }
-divide.symbol = '÷';
+divide.symbol = '/';
 
 export const MATH_OPERATIONS = [add, subtract, multiply, divide];
