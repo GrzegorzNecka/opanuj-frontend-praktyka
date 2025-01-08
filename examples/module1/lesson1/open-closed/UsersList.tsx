@@ -11,7 +11,7 @@ export const UsersList = ({ header, viewFn }: UsersListProps) => {
   const { users, removeAllFilters, filterByFriends } = useUsers();
 
   return (
-    <div className="bg-white p-4 rounded-lg">
+    <div className="bg-pink-500 p-4 rounded-lg">
       <h1 className="text-xl font-bold mb-4">{header}</h1>
       <div className="my-4">
         <p>Filters</p>
