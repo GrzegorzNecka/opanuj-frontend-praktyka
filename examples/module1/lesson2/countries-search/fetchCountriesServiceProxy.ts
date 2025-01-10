@@ -27,10 +27,6 @@ const proxyHandler: ProxyHandler = {
   cache: new Map(),
 
   get(target, prop, receiver) {
-    console.log('🚀 ~ get ~ prop:', prop);
-    console.log('🚀 ~ get ~ receiver:', receiver);
-    console.log('🚀 ~ get ~ target:', target);
-    console.log('🚀 ~ get ~ this:', this.cache);
     if (prop !== 'fetchCountries') {
       return Reflect.get(target, prop, receiver);
     }
