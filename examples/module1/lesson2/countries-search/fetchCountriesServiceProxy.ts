@@ -44,6 +44,7 @@ const proxyHandler: ProxyHandler = {
 
       try {
         const result = await target.fetchCountries(name);
+        if (!Array.isArray(result)) return [];
         this.cache.set(cacheKey, result);
         return result;
       } catch (error) {
