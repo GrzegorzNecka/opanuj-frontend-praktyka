@@ -1,11 +1,11 @@
 import type { Country } from '../types';
+import { CountriesListItem } from './CountriesListItem';
 
 interface CountriesListProps {
   countries: Country[];
-  children: (country: Country) => React.ReactNode;
 }
 
-export const CountriesList = ({ countries, children }: CountriesListProps) => {
+export const CountriesList = ({ countries }: CountriesListProps) => {
   if (countries.length === 0) {
     return <p className="text-left">No countries found</p>;
   }
@@ -13,7 +13,7 @@ export const CountriesList = ({ countries, children }: CountriesListProps) => {
   return (
     <ul className="countries-grid grid grid-cols-2 gap-4 p-4">
       {countries.map((country) => (
-        <li key={country.name.common}>{children(country)}</li>
+        <CountriesListItem key={country.name.common} country={country} />
       ))}
     </ul>
   );

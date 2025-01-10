@@ -3,7 +3,6 @@ import { useCountriesSearch } from './hooks/useCountriesSearch';
 import { SortingSelect } from './components/SortingSelect';
 import { SearchInput } from './components/SearchInput';
 import { CountriesList } from './components/CountriesList';
-import { CountriesListItem } from './components/CountriesListItem';
 
 export type SortOption = 'name' | 'population' | 'area' | 'region' | 'currency';
 
@@ -19,9 +18,7 @@ function CountrySearchContainers() {
         <SearchInput value={name} onChange={setName} />
         <SortingSelect value={sortOption} onChange={setSortOption} />
       </form>
-      <CountriesList countries={countries}>
-        {(country) => <CountriesListItem country={country} />}
-      </CountriesList>
+      <CountriesList countries={countries} />
     </>
   );
 }
