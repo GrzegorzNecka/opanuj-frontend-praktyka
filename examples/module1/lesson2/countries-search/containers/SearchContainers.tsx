@@ -2,11 +2,17 @@ import { useState } from 'react';
 import { useCountriesSearch } from '../hooks/useCountriesSearch';
 import { SortingSelect } from '../components/SortingSelect';
 import { SearchInput } from '../components/SearchInput';
-import { CountriesList } from '../components/CountriesList';
 import { FilterInput } from '../components/FilterInput';
 import type { CountryFilters } from '../services/types';
 import type { SortOption } from '../services/sortCountries';
-import { Pagination } from '../components/Pagination';
+import { CountriesListContainer } from './CountriesListContainer';
+
+const FILTER_FIELDS = [
+  { label: 'Region', name: 'region' },
+  { label: 'Language', name: 'language' },
+  { label: 'Currency', name: 'currency' },
+  { label: 'Capital', name: 'capital' },
+] as const;
 
 function CountrySearchContainers() {
   const [name, setName] = useState('');
@@ -18,7 +24,7 @@ function CountrySearchContainers() {
     capital: '',
   });
 
-  const { countries, pagination, handlePageChange } = useCountriesSearch(
+  const { countries, isLoading, error } = useCountriesSearch(
     name,
     sortOption,
     countryFilters
@@ -42,46 +48,24 @@ function CountrySearchContainers() {
           onChange={setName}
         />
 
-        <FilterInput
-          label="Region"
-          name="region"
-          value={countryFilters.region || ''}
-          onChange={handleFilterChange}
-        />
-
-        <FilterInput
-          label="Language"
-          name="language"
-          value={countryFilters.language || ''}
-          onChange={handleFilterChange}
-        />
-
-        <FilterInput
-          label="Currency"
-          name="currency"
-          value={countryFilters.currency || ''}
-          onChange={handleFilterChange}
-        />
-
-        <FilterInput
-          label="Capital"
-          name="capital"
-          value={countryFilters.capital || ''}
-          onChange={handleFilterChange}
-        />
+        {FILTER_FIELDS.map((field) => (
+          <FilterInput
+            key={field.name}
+            label={field.label}
+            name={field.name}
+            value={countryFilters[field.name] || ''}
+            onChange={handleFilterChange}
+          />
+        ))}
 
         <SortingSelect value={sortOption} onChange={setSortOption} />
       </form>
 
-      <CountriesList countries={countries} />
-
-      {countries.length > 0 && (
-        <Pagination
-          currentPage={pagination.currentPage}
-          totalPages={pagination.totalPages}
-          onPageChange={handlePageChange}
-        />
-      )}
+      <CountriesListContainer
+        countries={countries}
+        isLoading={isLoading}
+        error={error}
+      />
     </>
   );
 }

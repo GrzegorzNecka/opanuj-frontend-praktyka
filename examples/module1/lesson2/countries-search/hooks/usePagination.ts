@@ -1,30 +1,31 @@
-import { useState } from 'react';
+import { useState, useMemo, useEffect } from 'react';
+import { getPaginatedItems } from '../utils/pagination';
 
-import type { PaginationParams } from '../utils/pagination';
+export function usePagination<T>(items: T[], itemsPerPage: number = 10) {
+  const [currentPage, setCurrentPage] = useState(1);
 
-const PAGINATION_CONFIG = {
-  ITEMS_PER_PAGE: 2,
-  DEFAULT_PAGE: 1,
-};
+  // Reset strony do pierwszej, gdy zmienia się lista elementów
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [items]);
 
-export function usePagination(totalItems: number) {
-  const [pagination, setPagination] = useState<PaginationParams>({
-    currentPage: PAGINATION_CONFIG.DEFAULT_PAGE,
-    itemsPerPage: PAGINATION_CONFIG.ITEMS_PER_PAGE,
-    totalPages: 0,
-  });
+  const totalPages = Math.ceil(items.length / itemsPerPage);
 
-  const updatePagination = (totalItems: number) => {
-    setPagination((prev) => ({
-      ...prev,
-      currentPage: PAGINATION_CONFIG.DEFAULT_PAGE,
-      totalPages: Math.ceil(totalItems / PAGINATION_CONFIG.ITEMS_PER_PAGE),
-    }));
+  const paginatedItems = useMemo(() => {
+    return getPaginatedItems(items, currentPage, itemsPerPage);
+  }, [items, currentPage, itemsPerPage]);
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
   };
 
-  const handlePageChange = (newPage: number) => {
-    setPagination((prev) => ({ ...prev, currentPage: newPage }));
+  return {
+    paginatedItems,
+    pagination: {
+      currentPage,
+      totalPages,
+      itemsPerPage,
+    },
+    handlePageChange,
   };
-
-  return { pagination, updatePagination, handlePageChange };
 }

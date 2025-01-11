@@ -11,10 +11,12 @@ export const CountriesList = ({ countries }: CountriesListProps) => {
   }
 
   return (
-    <ul className="countries-grid grid grid-cols-2 gap-4 p-4">
-      {countries.map((country) => (
-        <CountriesListItem key={country.name.common} country={country} />
-      ))}
-    </ul>
+    <>
+      <ul className="countries-grid grid grid-cols-2 gap-4 p-4">
+        {countries.map((country) => (
+          <CountriesListItem key={country.name.common} country={country} />
+        ))}
+      </ul>
+    </>
   );
 };
