@@ -1,4 +1,4 @@
-import type { Country } from '../types';
+import type { Country } from '../services/types';
 
 export const sortCountries = (countries: Country[], sortOption: string) => {
   return [...countries].sort((a, b) => {
