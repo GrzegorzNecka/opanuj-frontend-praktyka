@@ -17,6 +17,9 @@ export function useCountriesSearch(
       fetchCountries(searchTerm, CountryFilters)
         .then((data: Countries) => setCountries(data))
         .catch((error) => console.error('Error fetching data:', error));
+    } else {
+      // Reset countries to empty array when searchTerm is empty
+      setCountries([]);
     }
   }, [searchTerm, ...Object.values(CountryFilters)]);
 
