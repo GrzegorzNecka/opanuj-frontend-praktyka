@@ -31,7 +31,9 @@ export const createCountriesService = (dependencies: Dependencies) => {
     } else {
       try {
         countries = await api.fetchCountries(name);
-        if (!Array.isArray(countries)) return [];
+        if (!Array.isArray(countries)) {
+          return [];
+        }
         cache.setCache(cacheKey, countries);
       } catch (error) {
         console.error('Failed to fetch countries:', error);

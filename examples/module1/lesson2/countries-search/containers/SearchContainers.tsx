@@ -6,18 +6,23 @@ import { CountriesList } from '../components/CountriesList';
 import { FilterInput } from '../components/FilterInput';
 import type { CountryFilters } from '../services/types';
 import type { SortOption } from '../services/sortCountries';
+import { Pagination } from '../components/Pagination';
 
 function CountrySearchContainers() {
   const [name, setName] = useState('');
   const [sortOption, setSortOption] = useState<SortOption>('name');
-  const [CountryFilters, setCountryFilters] = useState<CountryFilters>({
+  const [countryFilters, setCountryFilters] = useState<CountryFilters>({
     region: '',
     language: '',
     currency: '',
     capital: '',
   });
 
-  const { countries } = useCountriesSearch(name, sortOption, CountryFilters);
+  const { countries, pagination, handlePageChange } = useCountriesSearch(
+    name,
+    sortOption,
+    countryFilters
+  );
 
   const handleFilterChange = (name: keyof CountryFilters, value: string) => {
     setCountryFilters((prev) => ({
@@ -40,28 +45,28 @@ function CountrySearchContainers() {
         <FilterInput
           label="Region"
           name="region"
-          value={CountryFilters.region || ''}
+          value={countryFilters.region || ''}
           onChange={handleFilterChange}
         />
 
         <FilterInput
           label="Language"
           name="language"
-          value={CountryFilters.language || ''}
+          value={countryFilters.language || ''}
           onChange={handleFilterChange}
         />
 
         <FilterInput
           label="Currency"
           name="currency"
-          value={CountryFilters.currency || ''}
+          value={countryFilters.currency || ''}
           onChange={handleFilterChange}
         />
 
         <FilterInput
           label="Capital"
           name="capital"
-          value={CountryFilters.capital || ''}
+          value={countryFilters.capital || ''}
           onChange={handleFilterChange}
         />
 
@@ -69,6 +74,14 @@ function CountrySearchContainers() {
       </form>
 
       <CountriesList countries={countries} />
+
+      {countries.length > 0 && (
+        <Pagination
+          currentPage={pagination.currentPage}
+          totalPages={pagination.totalPages}
+          onPageChange={handlePageChange}
+        />
+      )}
     </>
   );
 }
