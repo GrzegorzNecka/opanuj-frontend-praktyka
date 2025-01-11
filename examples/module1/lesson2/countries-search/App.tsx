@@ -1,6 +1,5 @@
 import './App.css';
-import CountrySearchContainers from './SearchContainers';
-// import CharacterSearchContainer from "./containers/CharacterSearchContainer";
+import CountrySearchContainers from './containers/SearchContainers';
 
 function App() {
   return (

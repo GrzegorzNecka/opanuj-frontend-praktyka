@@ -1,4 +1,4 @@
-import type { SortOption } from '../SearchContainers';
+import type { SortOption } from '../services/sortCountries';
 
 interface SortingSelectProps {
   value: SortOption;
@@ -14,9 +14,6 @@ export function SortingSelect({ value, onChange }: SortingSelectProps) {
     >
       <option value="name">Sort by name</option>
       <option value="population">Sort by population</option>
-      <option value="area">Sort by area</option>
-      <option value="region">Sort by region</option>
-      <option value="currency">Sort by currency</option>
     </select>
   );
 }

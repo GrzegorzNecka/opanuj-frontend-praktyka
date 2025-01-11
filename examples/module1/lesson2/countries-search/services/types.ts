@@ -90,3 +90,11 @@ export interface Country {
 }
 
 export type Countries = Country[];
+
+export interface CountryFilters {
+  region?: string;
+  population?: number;
+  language?: string;
+  currency?: string;
+  capital?: string;
+}
