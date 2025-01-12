@@ -9,12 +9,39 @@ type Dependencies = {
   filter?: ReturnType<typeof createFilterService>;
 };
 
-const validateInput = (type: SearchType, term: string): boolean =>
-  Boolean(type && term && typeof type === 'string' && typeof term === 'string');
-
 export const createCountriesService = (dependencies: Dependencies) => {
   const { api, cache, filter } = dependencies;
+  //helper function
+  const validateInput = (type: SearchType, term: string): boolean =>
+    Boolean(
+      type && term && typeof type === 'string' && typeof term === 'string'
+    );
 
+  //helper function
+  const applyFiltersIfNeeded = (
+    countries: Countries,
+    filters?: CountryFilters
+  ): Countries => {
+    if (!filter) return countries;
+    return filters ? filter.applyFilters(countries, filters) : countries;
+  };
+  //helper function
+  const fetchAndCacheCountries = async (
+    type: SearchType,
+    term: string,
+    cacheKey: string
+  ): Promise<Countries> => {
+    try {
+      const countries = await api.fetchCountries(type, term);
+      cache.setCache(cacheKey, countries);
+      return countries;
+    } catch (error) {
+      console.error('Failed to fetch countries:', error);
+      throw error;
+    }
+  };
+
+  //main function
   const getCountries = async (
     type: SearchType,
     term: string,
@@ -25,26 +52,14 @@ export const createCountriesService = (dependencies: Dependencies) => {
     }
 
     const cacheKey = cache.getCacheKey(`${type}:${term}`);
-    let countries: Countries;
+    const cachedData = cache.getFromCache(cacheKey);
 
-    if (cache.hasCache(cacheKey)) {
-      countries = cache.getFromCache(cacheKey)!;
-    } else {
-      try {
-        countries = await api.fetchCountries(type, term);
-        if (!Array.isArray(countries)) {
-          return [];
-        }
-        cache.setCache(cacheKey, countries);
-      } catch (error) {
-        console.error('Failed to fetch countries:', error);
-        throw error;
-      }
+    if (cachedData) {
+      return applyFiltersIfNeeded(cachedData, filters);
     }
 
-    if (!filter) return countries;
-
-    return filters ? filter.applyFilters(countries, filters) : countries;
+    const countries = await fetchAndCacheCountries(type, term, cacheKey);
+    return applyFiltersIfNeeded(countries, filters);
   };
 
   return { getCountries };

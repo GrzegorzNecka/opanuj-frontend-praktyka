@@ -15,7 +15,7 @@ export function useCountriesSearch(
   const [error, setError] = useState<Error | null>(null);
 
   useEffect(() => {
-    const fetchCountriesData = async () => {
+    const getCountriesData = async () => {
       if (!searchConfig.term) {
         setCountries([]);
         return;
@@ -25,6 +25,7 @@ export function useCountriesSearch(
       setError(null);
 
       try {
+        //TODO przekaż obiekt
         const data = await getCountries(
           searchConfig.type,
           searchConfig.term,
@@ -33,16 +34,14 @@ export function useCountriesSearch(
         const sortedData = sortCountries(data, sortOption);
         setCountries(sortedData);
       } catch (error) {
-        setError(
-          new Error(`Failed to fetch countries by ${searchConfig.term}`)
-        );
+        setError(new Error(`Failed to fetch countries`));
         setCountries([]);
       } finally {
         setIsLoading(false);
       }
     };
 
-    fetchCountriesData();
+    getCountriesData();
   }, [
     sortOption,
     ...Object.values(searchConfig),
