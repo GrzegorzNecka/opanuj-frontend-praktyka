@@ -97,3 +97,10 @@ export interface CountryFilters {
   currency?: string;
   capital?: string;
 }
+
+export type SearchType = 'name' | 'currency';
+
+export type SearchConfig = {
+  term: string;
+  type: SearchType;
+};

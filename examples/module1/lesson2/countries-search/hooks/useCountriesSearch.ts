@@ -1,11 +1,12 @@
 import { useState, useEffect } from 'react';
 import type { Countries } from '../services/types';
-import { fetchCountries } from '../services';
+import { getCountries } from '../services';
 import { sortCountries, type SortOption } from '../services/sortCountries';
 import type { CountryFilters } from '../services/types';
+import type { SearchConfig } from '../services/types';
 
 export function useCountriesSearch(
-  searchTerm: string,
+  searchConfig: SearchConfig,
   sortOption: SortOption,
   countryFilters: CountryFilters
 ) {
@@ -15,7 +16,7 @@ export function useCountriesSearch(
 
   useEffect(() => {
     const fetchCountriesData = async () => {
-      if (!searchTerm) {
+      if (!searchConfig.term) {
         setCountries([]);
         return;
       }
@@ -24,11 +25,17 @@ export function useCountriesSearch(
       setError(null);
 
       try {
-        const data = await fetchCountries(searchTerm, countryFilters);
+        const data = await getCountries(
+          searchConfig.type,
+          searchConfig.term,
+          countryFilters
+        );
         const sortedData = sortCountries(data, sortOption);
         setCountries(sortedData);
       } catch (error) {
-        setError(new Error('Failed to fetch countries'));
+        setError(
+          new Error(`Failed to fetch countries by ${searchConfig.term}`)
+        );
         setCountries([]);
       } finally {
         setIsLoading(false);
@@ -36,11 +43,11 @@ export function useCountriesSearch(
     };
 
     fetchCountriesData();
-  }, [searchTerm, sortOption, ...Object.values(countryFilters)]);
+  }, [
+    sortOption,
+    ...Object.values(searchConfig),
+    ...Object.values(countryFilters),
+  ]);
 
-  return {
-    countries,
-    isLoading,
-    error,
-  };
+  return { countries, isLoading, error };
 }

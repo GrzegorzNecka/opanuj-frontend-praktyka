@@ -1,4 +1,4 @@
-import type { Countries, CountryFilters } from './types';
+import type { Countries, CountryFilters, SearchType } from './types';
 import type { createCacheService } from './cacheService';
 import type { createCountriesAPI } from './countriesAPI';
 import type { createFilterService } from './filterService';
@@ -9,28 +9,29 @@ type Dependencies = {
   filter?: ReturnType<typeof createFilterService>;
 };
 
-const validateInput = (name: string): boolean =>
-  Boolean(name && typeof name === 'string');
+const validateInput = (type: SearchType, term: string): boolean =>
+  Boolean(type && term && typeof type === 'string' && typeof term === 'string');
 
 export const createCountriesService = (dependencies: Dependencies) => {
   const { api, cache, filter } = dependencies;
 
   const getCountries = async (
-    name: string,
+    type: SearchType,
+    term: string,
     filters?: CountryFilters
   ): Promise<Countries> => {
-    if (!validateInput(name)) {
-      throw new Error('Invalid country name provided');
+    if (!validateInput(type, term)) {
+      throw new Error('Invalid search parameters provided');
     }
 
-    const cacheKey = cache.getCacheKey(name);
+    const cacheKey = cache.getCacheKey(`${type}:${term}`);
     let countries: Countries;
 
     if (cache.hasCache(cacheKey)) {
       countries = cache.getFromCache(cacheKey)!;
     } else {
       try {
-        countries = await api.fetchCountries(name);
+        countries = await api.fetchCountries(type, term);
         if (!Array.isArray(countries)) {
           return [];
         }

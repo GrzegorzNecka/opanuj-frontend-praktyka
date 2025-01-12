@@ -8,4 +8,4 @@ const cache = createCacheService();
 const filter = createFilterService();
 const { getCountries } = createCountriesService({ api, cache, filter });
 
-export const fetchCountries = getCountries;
+export { getCountries };

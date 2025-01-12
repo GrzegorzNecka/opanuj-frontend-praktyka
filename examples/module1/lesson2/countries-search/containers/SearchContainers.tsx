@@ -3,7 +3,7 @@ import { useCountriesSearch } from '../hooks/useCountriesSearch';
 import { SortingSelect } from '../components/SortingSelect';
 import { SearchInput } from '../components/SearchInput';
 import { FilterInput } from '../components/FilterInput';
-import type { CountryFilters } from '../services/types';
+import type { CountryFilters, SearchConfig } from '../services/types';
 import type { SortOption } from '../services/sortCountries';
 import { CountriesListContainer } from './CountriesListContainer';
 
@@ -15,7 +15,10 @@ const FILTER_FIELDS = [
 ] as const;
 
 function CountrySearchContainers() {
-  const [name, setName] = useState('');
+  const [searchConfig, setSearchConfig] = useState<SearchConfig>({
+    term: '',
+    type: 'name',
+  });
 
   const [sortOption, setSortOption] = useState<SortOption>('name');
   const [countryFilters, setCountryFilters] = useState<CountryFilters>({
@@ -26,7 +29,7 @@ function CountrySearchContainers() {
   });
 
   const { countries, isLoading, error } = useCountriesSearch(
-    name,
+    searchConfig,
     sortOption,
     countryFilters
   );
@@ -43,11 +46,21 @@ function CountrySearchContainers() {
       <h1 className="text-center py-4">Countries Search</h1>
       <form className="flex gap-4 mb-4">
         <SearchInput
-          label="Search"
+          label="Search by name"
           placeholder="Search by country's name..."
           name="name"
-          value={name}
-          onChange={setName}
+          value={searchConfig.type === 'name' ? searchConfig.term : ''}
+          onChange={(value) => setSearchConfig({ term: value, type: 'name' })}
+        />
+
+        <SearchInput
+          label="Search by currency"
+          placeholder="Search by currency..."
+          name="currency"
+          value={searchConfig.type === 'currency' ? searchConfig.term : ''}
+          onChange={(value) =>
+            setSearchConfig({ term: value, type: 'currency' })
+          }
         />
 
         {FILTER_FIELDS.map((field) => (
