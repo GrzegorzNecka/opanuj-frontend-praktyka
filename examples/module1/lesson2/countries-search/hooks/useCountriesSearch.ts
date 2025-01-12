@@ -28,7 +28,7 @@ export function useCountriesSearch(
         const sortedData = sortCountries(data, sortOption);
         setCountries(sortedData);
       } catch (error) {
-        setError(error as Error);
+        setError(new Error('Failed to fetch countries'));
         setCountries([]);
       } finally {
         setIsLoading(false);

@@ -16,6 +16,7 @@ const FILTER_FIELDS = [
 
 function CountrySearchContainers() {
   const [name, setName] = useState('');
+
   const [sortOption, setSortOption] = useState<SortOption>('name');
   const [countryFilters, setCountryFilters] = useState<CountryFilters>({
     region: '',
@@ -43,6 +44,7 @@ function CountrySearchContainers() {
       <form className="flex gap-4 mb-4">
         <SearchInput
           label="Search"
+          placeholder="Search by country's name..."
           name="name"
           value={name}
           onChange={setName}

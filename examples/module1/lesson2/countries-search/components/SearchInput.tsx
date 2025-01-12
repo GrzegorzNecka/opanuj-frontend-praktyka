@@ -3,6 +3,7 @@ interface SearchInputProps {
   name: string;
   value: string;
   onChange: (value: string) => void;
+  placeholder: string;
 }
 
 export function SearchInput({
@@ -10,6 +11,7 @@ export function SearchInput({
   name,
   value,
   onChange,
+  placeholder,
 }: SearchInputProps) {
   return (
     <div className="flex flex-col gap-1">
@@ -21,7 +23,7 @@ export function SearchInput({
         type="text"
         value={value}
         onChange={(e) => onChange(e.target.value.trim())}
-        placeholder="Search countries..."
+        placeholder={placeholder}
         className="p-2 border rounded"
         aria-label="Search countries"
       />

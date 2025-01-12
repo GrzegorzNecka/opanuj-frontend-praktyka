@@ -26,6 +26,11 @@ export function CountriesListContainer({
 
   if (error) {
     return <div>Error: {error.message}</div>;
+    // return <div>Failed to fetch countries</div>;
+  }
+
+  if (paginatedCountries.length === 0) {
+    return <div>No countries found</div>;
   }
 
   return (
