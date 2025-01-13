@@ -1,5 +1,5 @@
 import { useState, useMemo, useEffect } from 'react';
-import { getPaginatedItems } from '../utils/pagination';
+import { getPaginatedItems, getTotalPages } from '../utils/pagination';
 
 export function usePagination<T>(items: T[], itemsPerPage: number = 10) {
   const [currentPage, setCurrentPage] = useState(1);
@@ -9,7 +9,7 @@ export function usePagination<T>(items: T[], itemsPerPage: number = 10) {
     setCurrentPage(1);
   }, [items]);
 
-  const totalPages = Math.ceil(items.length / itemsPerPage);
+  const totalPages = getTotalPages(items, itemsPerPage);
 
   const paginatedItems = useMemo(() => {
     return getPaginatedItems(items, currentPage, itemsPerPage);

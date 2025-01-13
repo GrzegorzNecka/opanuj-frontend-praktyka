@@ -1,8 +1,12 @@
 export interface PaginationParams {
-  currentPage: number;
-  itemsPerPage: number;
-  totalPages: number;
+  currentPage: number; // Aktualnie wyświetlana strona
+  itemsPerPage: number; // Liczba elementów na stronę
+  totalPages: number; // Całkowita liczba stron
 }
+
+export const getTotalPages = <T>(items: T[], itemsPerPage: number): number => {
+  return Math.ceil(items.length / itemsPerPage);
+};
 
 export const getPaginatedItems = <T>(
   items: T[],
