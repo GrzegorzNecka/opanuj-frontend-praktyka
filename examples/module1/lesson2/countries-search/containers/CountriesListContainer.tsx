@@ -6,7 +6,7 @@ import type { Countries } from '../services/types';
 interface CountriesListContainerProps {
   countries: Countries;
   isLoading: boolean;
-  error: Error | null;
+  error: string | null;
 }
 
 export function CountriesListContainer({
@@ -25,7 +25,7 @@ export function CountriesListContainer({
   }
 
   if (error) {
-    return <div>{error.message}</div>;
+    return <div>{error}</div>;
     // return <div>Failed to fetch countries</div>;
   }
 

@@ -1,83 +1,74 @@
 import { useState } from 'react';
-import { useCountriesSearch } from '../hooks/useCountriesSearch';
-import { SortingSelect } from '../components/SortingSelect';
 import { SearchInput } from '../components/SearchInput';
-import { FilterInput } from '../components/FilterInput';
-import type { CountryFilters, SearchConfig } from '../services/types';
-import type { SortOption } from '../services/sortCountries';
+import type { FilterType, SortOrder } from '../services/types';
 import { CountriesListContainer } from './CountriesListContainer';
-
-const FILTER_FIELDS = [
-  { label: 'Region', name: 'region' },
-  { label: 'Language', name: 'language' },
-  { label: 'Currency', name: 'currency' },
-  { label: 'Capital', name: 'capital' },
-] as const;
+import useFetchCountries from '../hooks/useFetchCountries';
+import React from 'react';
 
 function CountrySearchContainers() {
-  const [searchConfig, setSearchConfig] = useState<SearchConfig>({
-    term: '',
-    type: 'name',
-  });
-
-  const [sortOption, setSortOption] = useState<SortOption>('name');
-  const [countryFilters, setCountryFilters] = useState<CountryFilters>({
-    region: '',
-    language: '',
-    currency: '',
-    capital: '',
-  });
-
-  const { countries, isLoading, error } = useCountriesSearch(
-    searchConfig,
-    sortOption,
-    countryFilters
+  const [searchTerm, setSearchTerm] = useState<string>('');
+  const [sortOrder, setSortOrder] = useState<SortOrder>('alphabetical');
+  const [filterType, setFilterType] = useState<FilterType>('name');
+  const { countries, isLoading, error } = useFetchCountries(
+    searchTerm,
+    filterType
   );
 
-  const handleFilterChange = (name: keyof CountryFilters, value: string) => {
-    setCountryFilters((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
+  const sortedCountries = React.useMemo(() => {
+    if (!countries) return [];
+    const sorted = [...countries];
+    if (sortOrder === 'alphabetical') {
+      sorted.sort((a, b) => a.name.common.localeCompare(b.name.common));
+    } else if (sortOrder === 'population') {
+      sorted.sort((a, b) => (b.population || 0) - (a.population || 0));
+    }
+    return sorted;
+  }, [countries, sortOrder]);
 
   return (
     <>
-      <h1 className="text-center py-4">Countries Search</h1>
-      <form className="flex gap-4 mb-4">
-        <SearchInput
-          label="Search by name"
-          placeholder="Search by country's name..."
-          name="name"
-          value={searchConfig.type === 'name' ? searchConfig.term : ''}
-          onChange={(value) => setSearchConfig({ term: value, type: 'name' })}
-        />
+      <div className="flex gap-4 mb-4">
+        <label htmlFor={filterType} className="text-sm font-medium">
+          search config
+        </label>
+
+        <select
+          name="filterType"
+          value={filterType}
+          onChange={(e) => setFilterType(e.target.value as FilterType)}
+          className="p-2 border rounded-md"
+          aria-label="Select search filter type"
+        >
+          <option value="name">Search by name</option>
+          <option value="currency">Search by currency</option>
+          <option value="language">Search by language</option>
+          <option value="capital">Search by capital</option>
+        </select>
 
         <SearchInput
-          label="Search by currency"
-          placeholder="Search by currency..."
-          name="currency"
-          value={searchConfig.type === 'currency' ? searchConfig.term : ''}
-          onChange={(value) =>
-            setSearchConfig({ term: value, type: 'currency' })
-          }
+          label={`Search by ${filterType}`}
+          placeholder={`Search by ${filterType}...`}
+          name={filterType}
+          value={searchTerm}
+          searchValue={setSearchTerm}
         />
-
-        {FILTER_FIELDS.map((field) => (
-          <FilterInput
-            key={field.name}
-            label={field.label}
-            name={field.name}
-            value={countryFilters[field.name] || ''}
-            onChange={handleFilterChange}
-          />
-        ))}
-
-        <SortingSelect value={sortOption} onChange={setSortOption} />
-      </form>
+        <label htmlFor="sortType" className="text-sm font-medium">
+          sortBy
+        </label>
+        <select
+          name="sortType"
+          value={sortOrder}
+          onChange={(e) => setSortOrder(e.target.value as SortOrder)}
+          className="p-2 border rounded-md"
+          aria-label="Select sort order"
+        >
+          <option value="alphabetical">Sort alphabetically</option>
+          <option value="population">Sort by population</option>
+        </select>
+      </div>
 
       <CountriesListContainer
-        countries={countries}
+        countries={sortedCountries}
         isLoading={isLoading}
         error={error}
       />
