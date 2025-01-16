@@ -1,5 +1,6 @@
 import { debounce } from 'es-toolkit';
-import { useCallback } from 'react';
+import React from 'react';
+import { useCallback, useState } from 'react';
 
 interface SearchInputProps {
   label: string;
@@ -12,10 +13,12 @@ interface SearchInputProps {
 export function SearchInput({
   label,
   name,
-  value,
+  value: externalValue,
   placeholder,
   searchValue,
 }: SearchInputProps) {
+  const [localSearchTerm, setLocalSearchTerm] = useState(externalValue);
+
   const debouncedSearch = useCallback(
     debounce((value: string) => {
       searchValue(value);
@@ -23,18 +26,28 @@ export function SearchInput({
     []
   );
 
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newValue = e.target.value.trim();
+    setLocalSearchTerm(newValue);
+    debouncedSearch(newValue);
+  };
+
+  React.useEffect(() => {
+    setLocalSearchTerm(externalValue);
+  }, [externalValue]);
+
   return (
-    <div className="flex flex-col gap-1">
+    <div className="mb-4">
       <label htmlFor={name} className="text-sm font-medium">
         {label}
       </label>
       <input
         name={name}
         type="text"
-        value={value}
-        onChange={(e) => debouncedSearch(e.target.value.trim())}
+        value={localSearchTerm}
+        onChange={handleChange}
         placeholder={placeholder}
-        className="p-2 border rounded"
+        className="w-full p-2 border"
         aria-label="Search countries"
       />
     </div>

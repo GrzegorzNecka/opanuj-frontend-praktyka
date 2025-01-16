@@ -1,10 +1,10 @@
 import './App.css';
-import CountriesSearchContainer from './containers/solution/CountriesSearchContainer';
+import SearchContainers from './containers/SearchContainers';
 
 function App() {
   return (
     <div>
-      <CountriesSearchContainer />
+      <SearchContainers />
     </div>
   );
 }

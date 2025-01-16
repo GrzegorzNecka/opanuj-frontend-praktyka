@@ -4,6 +4,10 @@ import type { FilterType, SortOrder } from '../services/types';
 import { CountriesListContainer } from './CountriesListContainer';
 import useFetchCountries from '../hooks/useFetchCountries';
 import React from 'react';
+import FilterOptions from '../components/FilterOptions';
+import SortOptions from '../components/SortOptions';
+import Loader from '../components/Loader';
+import ErrorBoundary from '../components/ErrorBoundary';
 
 function CountrySearchContainers() {
   const [searchTerm, setSearchTerm] = useState<string>('');
@@ -25,53 +29,29 @@ function CountrySearchContainers() {
     return sorted;
   }, [countries, sortOrder]);
 
+  const renderContent = () => {
+    if (error) return <div className="text-red-500">{error}</div>;
+    if (isLoading) return <Loader />;
+
+    return <CountriesListContainer countries={sortedCountries} />;
+  };
+
   return (
     <>
       <div className="flex gap-4 mb-4">
-        <label htmlFor={filterType} className="text-sm font-medium">
-          search config
-        </label>
-
-        <select
-          name="filterType"
-          value={filterType}
-          onChange={(e) => setFilterType(e.target.value as FilterType)}
-          className="p-2 border rounded-md"
-          aria-label="Select search filter type"
-        >
-          <option value="name">Search by name</option>
-          <option value="currency">Search by currency</option>
-          <option value="language">Search by language</option>
-          <option value="capital">Search by capital</option>
-        </select>
-
         <SearchInput
           label={`Search by ${filterType}`}
-          placeholder={`Search by ${filterType}...`}
+          placeholder={`Search by country's ${filterType}...`}
           name={filterType}
           value={searchTerm}
           searchValue={setSearchTerm}
         />
-        <label htmlFor="sortType" className="text-sm font-medium">
-          sortBy
-        </label>
-        <select
-          name="sortType"
-          value={sortOrder}
-          onChange={(e) => setSortOrder(e.target.value as SortOrder)}
-          className="p-2 border rounded-md"
-          aria-label="Select sort order"
-        >
-          <option value="alphabetical">Sort alphabetically</option>
-          <option value="population">Sort by population</option>
-        </select>
+
+        <FilterOptions filterType={filterType} setFilterType={setFilterType} />
+        <SortOptions sortOrder={sortOrder} setSortOrder={setSortOrder} />
       </div>
 
-      <CountriesListContainer
-        countries={sortedCountries}
-        isLoading={isLoading}
-        error={error}
-      />
+      <ErrorBoundary>{renderContent()}</ErrorBoundary>
     </>
   );
 }
