@@ -2,7 +2,7 @@ import type {
   Country,
   Countries,
   FilterCountriesOptions,
-} from '../../countries-search/services/types';
+} from '../../countries-search/_services/types';
 
 const createFilter =
   (predicate: (country: Country, value: any) => boolean) =>

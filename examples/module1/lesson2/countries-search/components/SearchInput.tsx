@@ -37,7 +37,7 @@ export function SearchInput({
   }, [externalValue]);
 
   return (
-    <div className="mb-4">
+    <div className="mb-4 w-full">
       <label htmlFor={name} className="text-sm font-medium">
         {label}
       </label>

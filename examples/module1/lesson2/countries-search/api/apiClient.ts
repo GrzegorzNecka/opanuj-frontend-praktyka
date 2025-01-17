@@ -1,4 +1,12 @@
-import type { Country } from '../services/types';
+import type { Country } from './types';
+
+export type ApiClientFn = {
+  fetchAllCountries: () => Promise<Country[]>;
+  fetchCountriesByName: (name: string) => Promise<Country[]>;
+  fetchCountriesByCapital: (capital: string) => Promise<Country[]>;
+  fetchCountriesByCurrency: (currency: string) => Promise<Country[]>;
+  fetchCountriesByLanguage: (language: string) => Promise<Country[]>;
+};
 
 const BASE_URL = 'https://restcountries.com/v3.1';
 

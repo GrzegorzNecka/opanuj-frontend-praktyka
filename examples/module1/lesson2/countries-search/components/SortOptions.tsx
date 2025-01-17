@@ -1,5 +1,5 @@
 import React from 'react';
-import type { SortOrder } from '../types';
+import type { SortOrder } from '../api/types';
 
 interface SortOptionsProps {
   sortOrder: SortOrder;
@@ -13,7 +13,7 @@ const SortOptions = ({ sortOrder, setSortOrder }: SortOptionsProps) => {
 
   return (
     <div className="mb-4">
-      <label className="mr-2">
+      <label className="text-sm font-medium">
         Sort By:
         <select
           value={sortOrder}

@@ -4,7 +4,6 @@ import { getPaginatedItems, getTotalPages } from '../utils/pagination';
 export function usePagination<T>(items: T[], itemsPerPage: number = 10) {
   const [currentPage, setCurrentPage] = useState(1);
 
-  // Reset strony do pierwszej, gdy zmienia się lista elementów
   useEffect(() => {
     setCurrentPage(1);
   }, [items]);

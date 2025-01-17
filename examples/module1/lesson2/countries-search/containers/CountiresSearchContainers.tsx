@@ -1,8 +1,10 @@
 import { useState } from 'react';
 import { SearchInput } from '../components/SearchInput';
-import type { FilterType, SortOrder } from '../services/types';
-import { CountriesListContainer } from './CountriesListContainer';
+import type { FilterType, SortOrder } from '../api/types';
+import { CountriesList } from '../components/CountriesList';
+import { Pagination } from '../components/Pagination';
 import useFetchCountries from '../hooks/useFetchCountries';
+import { usePagination } from '../hooks/usePagination';
 import React from 'react';
 import FilterOptions from '../components/FilterOptions';
 import SortOptions from '../components/SortOptions';
@@ -29,11 +31,28 @@ function CountrySearchContainers() {
     return sorted;
   }, [countries, sortOrder]);
 
+  const {
+    paginatedItems: paginatedCountries,
+    pagination,
+    handlePageChange,
+  } = usePagination(sortedCountries);
+
   const renderContent = () => {
     if (error) return <div className="text-red-500">{error}</div>;
     if (isLoading) return <Loader />;
 
-    return <CountriesListContainer countries={sortedCountries} />;
+    return (
+      <>
+        <CountriesList countries={paginatedCountries} />
+        {paginatedCountries.length > 0 && (
+          <Pagination
+            currentPage={pagination.currentPage}
+            totalPages={pagination.totalPages}
+            onPageChange={handlePageChange}
+          />
+        )}
+      </>
+    );
   };
 
   return (

@@ -1,18 +1,18 @@
 import { useEffect, useState } from 'react';
-import {
-  fetchAllCountries,
-  fetchCountriesByCapital,
-  fetchCountriesByCurrency,
-  fetchCountriesByLanguage,
-  fetchCountriesByName,
-} from '../api/apiClient';
-import type { FilterType } from '../types';
-import type { Country } from '../services/types';
+import { apiClientWithCaching } from '../api/apiClientWithCaching';
+import type { FilterType, Country } from '../api/types';
 
 const useFetchCountries = (searchTerm: string, filterType: FilterType) => {
   const [countries, setCountries] = useState<Country[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
+  const {
+    fetchCountriesByName,
+    fetchCountriesByCurrency,
+    fetchCountriesByLanguage,
+    fetchCountriesByCapital,
+    fetchAllCountries,
+  } = apiClientWithCaching();
 
   useEffect(() => {
     const fetchStrategies = {

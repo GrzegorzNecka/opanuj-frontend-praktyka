@@ -1,5 +1,5 @@
 import React from 'react';
-import type { FilterType } from '../types';
+import type { FilterType } from '../api/types';
 
 interface FilterOptionsProps {
   filterType: FilterType;
@@ -13,7 +13,7 @@ const FilterOptions = ({ filterType, setFilterType }: FilterOptionsProps) => {
 
   return (
     <div className="mb-4">
-      <label className="mr-2">
+      <label className="text-sm font-medium">
         Filter By:
         <select
           id="filter"
