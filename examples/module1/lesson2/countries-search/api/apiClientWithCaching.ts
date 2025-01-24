@@ -50,6 +50,7 @@ export const apiClientWithCaching = (): ApiClientFn => {
     }
 
     const fetchFn = fetchStrategies[type];
+
     const data =
       type === 'all'
         ? await fetchFn('')

@@ -35,7 +35,7 @@ function CountrySearchContainers() {
     paginatedItems: paginatedCountries,
     pagination,
     handlePageChange,
-  } = usePagination(sortedCountries);
+  } = usePagination(sortedCountries, 5);
 
   const renderContent = () => {
     if (error) return <div className="text-red-500">{error}</div>;
