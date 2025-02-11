@@ -31,18 +31,48 @@ export const cartSlice = createSlice({
         state.items.push(newItem);
       }
     },
+    removeFromCart: (state, action: PayloadAction<number>) => {
+      state.items = state.items.filter((item) => item.id !== action.payload);
+    },
     clearCart: (state) => {
       state.items = [];
+    },
+    increaseAmount: (state, action: PayloadAction<number>) => {
+      const cartItem = state.items.find((item) => item.id === action.payload);
+      if (!cartItem) return;
+      cartItem.amount += 1;
+    },
+    decreaseAmount: (state, action: PayloadAction<number>) => {
+      const cartItem = state.items.find((item) => item.id === action.payload);
+
+      if (!cartItem) return;
+
+      if (cartItem.amount <= 1) {
+        state.items = state.items.filter((item) => item.id !== action.payload);
+      } else {
+        cartItem.amount -= 1;
+      }
     },
   },
 });
 
-export const { addToCart, clearCart } = cartSlice.actions;
+export const {
+  addToCart,
+  clearCart,
+  decreaseAmount,
+  removeFromCart,
+  increaseAmount,
+} = cartSlice.actions;
 
 export const selectCartItems = (state: RootState) => state.cart.items;
 export const selectItemAmount = (state: RootState) =>
   state.cart.items.reduce((accumulator, currentItem) => {
     return accumulator + currentItem.amount;
+  }, 0);
+
+export const selectSubtotal = (state: RootState) =>
+  state.cart.items.reduce((total, item) => {
+    return total + item.price * item.amount;
   }, 0);
 
 export default cartSlice.reducer;
