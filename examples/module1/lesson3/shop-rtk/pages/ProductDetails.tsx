@@ -1,25 +1,28 @@
-import React, { useContext } from 'react';
 import { useParams } from 'react-router-dom';
-import { ProductContext } from '../contexts/ProductContext';
-import { useAppDispatch } from '../hooks/rtk';
+
 import { addToCart } from '../state/cartSlice';
+import { useGetProductByIdQuery } from '../services/productsApi';
+import { useAppDispatch } from '../hooks/rtk';
 
 const ProductDetails = () => {
   const { id } = useParams();
 
-  const { products } = useContext(ProductContext);
-  const dispatch = useAppDispatch();
-  const product = products.find((item) => {
-    return item.id === parseInt(id!);
-  });
+  const {
+    data: product,
+    isLoading,
+    error,
+  } = useGetProductByIdQuery(Number(id));
 
-  if (!product) {
+  if (isLoading) return <div>Loading...</div>;
+  if (error) return <div>Error occurred</div>;
+  if (!product)
     return (
       <section className="h-screen flex justify-center items-center">
         Loading...
       </section>
     );
-  }
+
+  const dispatch = useAppDispatch();
 
   const { title, price, description, image } = product;
   return (

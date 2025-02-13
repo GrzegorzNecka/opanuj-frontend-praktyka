@@ -16,7 +16,10 @@ const Header = ({ setIsSidebarOpen }: HeaderProps) => {
   const itemAmount = useAppSelector(selectItemAmount);
 
   return (
-    <header className={`bg-none py-6 fixed w-full z-10 lg:px-8 transition-all`}>
+    <header
+      data-testid="shop-header"
+      className={`bg-none py-6 fixed w-full z-10 lg:px-8 transition-all`}
+    >
       <div className="container mx-auto flex items-center justify-between h-full">
         <Link to={`/`} className="cursor-pointer ml-8">
           <CiShop className="text-3xl " />

@@ -1,9 +1,13 @@
-import { useContext } from 'react';
 import Product from '../components/Product';
-import { ProductContext } from '../contexts/ProductContext';
+
+import { useGetProductsQuery } from '../services/productsApi';
 
 const Home = () => {
-  const { products } = useContext(ProductContext);
+  const { data: products, isLoading, error } = useGetProductsQuery();
+
+  if (isLoading) return <div>Loading...</div>;
+  if (error) return <div>Error occurred</div>;
+  if (!products) return <div>No products found</div>;
 
   return (
     <div>
