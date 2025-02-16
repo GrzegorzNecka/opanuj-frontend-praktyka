@@ -1,4 +1,4 @@
-import { createContext, useEffect, useState } from 'react';
+import { createContext, useCallback, useMemo, useState } from 'react';
 import type { CartItem } from '../types/CartItem';
 import type { Product } from '../types/Product';
 
@@ -13,87 +13,81 @@ type CartContextType = {
 };
 
 export const CartContext = createContext<CartContextType>(
-  {} as CartContextType // typescript hack to avoid initializing context with undefined, use this context only with a provider
+  {} as CartContextType
 );
 
 const CartProvider = ({ children }: { children: React.ReactNode }) => {
   const [cart, setCart] = useState<CartItem[]>([]);
-  const [itemAmount, setItemAmount] = useState(0);
-  const [totalPrice, setTotalPrice] = useState(0);
 
-  useEffect(() => {
-    const total = cart.reduce((accumulator, currentItem) => {
-      return accumulator + currentItem.price * currentItem.amount;
-    }, 0);
-    setTotalPrice(total);
-  }, [cart]);
+  // Memoizowane obliczenia zamiast useEffect
+  const itemAmount = useMemo(
+    () => cart.reduce((acc, item) => acc + item.amount, 0),
+    [cart]
+  );
 
-  useEffect(() => {
-    const amount = cart.reduce((accumulator, currentItem) => {
-      return accumulator + currentItem.amount;
-    }, 0);
-    setItemAmount(amount);
-  }, [cart]);
+  const total = useMemo(
+    () => cart.reduce((acc, item) => acc + item.price * item.amount, 0),
+    [cart]
+  );
 
-  const addToCart = (product: Product | CartItem) => {
-    const cartItem = cart.find((item) => {
-      return item.id === product.id;
+  // Memoizowane funkcje do modyfikacji koszyka
+  const addToCart = useCallback((product: Product | CartItem) => {
+    setCart((prevCart) => {
+      const cartItem = prevCart.find((item) => item.id === product.id);
+      if (cartItem) {
+        return prevCart.map((item) =>
+          item.id === product.id ? { ...item, amount: item.amount + 1 } : item
+        );
+      }
+      return [...prevCart, { ...product, amount: 1 }];
     });
+  }, []);
 
-    if (cartItem) {
-      const newCart = cart.map((item) =>
-        item.id === product.id ? { ...item, amount: cartItem.amount + 1 } : item
+  const decreaseAmount = useCallback((id: number) => {
+    setCart((prevCart) => {
+      const cartItem = prevCart.find((item) => item.id === id);
+      if (!cartItem) return prevCart;
+      if (cartItem.amount <= 1) {
+        return prevCart.filter((item) => item.id !== id);
+      }
+      return prevCart.map((item) =>
+        item.id === id ? { ...item, amount: item.amount - 1 } : item
       );
-      setCart(newCart);
-    } else {
-      const newItem = { ...product, amount: 1 };
-      setCart([...cart, newItem]);
-    }
-  };
-
-  const decreaseAmount = (id: number) => {
-    const cartItem = cart.find((item) => item.id === id);
-
-    if (!cartItem) {
-      return;
-    }
-
-    if (cartItem.amount <= 1) {
-      removeFromCart(id);
-      return;
-    }
-
-    const newCart = cart.map((item) =>
-      item.id === id ? { ...item, amount: cartItem.amount - 1 } : item
-    );
-    setCart(newCart);
-  };
-
-  const removeFromCart = (id: number) => {
-    const newCart = cart.filter((item) => {
-      return item.id !== id;
     });
-    setCart(newCart);
-  };
+  }, []);
 
-  const clearCart = () => {
+  const removeFromCart = useCallback((id: number) => {
+    setCart((prevCart) => prevCart.filter((item) => item.id !== id));
+  }, []);
+
+  const clearCart = useCallback(() => {
     setCart([]);
-  };
+  }, []);
+
+  // Memoizowana wartość kontekstu
+  const contextValue = useMemo(
+    () => ({
+      cart,
+      itemAmount,
+      total,
+      addToCart,
+      removeFromCart,
+      clearCart,
+      decreaseAmount,
+    }),
+    [
+      cart,
+      itemAmount,
+      total,
+      addToCart,
+      removeFromCart,
+      clearCart,
+      decreaseAmount,
+    ]
+  );
 
   return (
-    <CartContext.Provider
-      value={{
-        cart,
-        addToCart,
-        removeFromCart,
-        clearCart,
-        decreaseAmount,
-        itemAmount,
-        total: totalPrice,
-      }}
-    >
-      {children}
-    </CartContext.Provider>
+    <CartContext.Provider value={contextValue}>{children}</CartContext.Provider>
   );
 };
 
