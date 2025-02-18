@@ -1,6 +1,9 @@
 function generateRandomSubset(users) {
-  const shuffled = users.sort(() => 0.5 - Math.random());
-  const randomMax = Math.floor(Math.random() * users.length);
+  if (!users || !Array.isArray(users) || users.length === 0) {
+    return [];
+  }
+  const shuffled = [...users].sort(() => 0.5 - Math.random());
+  const randomMax = Math.floor(Math.random() * users.length) + 1;
   return shuffled.slice(0, randomMax);
 }
 

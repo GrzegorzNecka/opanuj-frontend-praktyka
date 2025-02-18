@@ -1,8 +1,6 @@
-import { useContext } from 'react';
 import { BsBag } from 'react-icons/bs';
 import { CiShop } from 'react-icons/ci';
 import { Link } from 'react-router-dom';
-import { CartContext } from '../contexts/CartContext';
 import { useRenderLogging } from '../tests/useRenderLogging';
 import CartBadge from './CartBadge';
 

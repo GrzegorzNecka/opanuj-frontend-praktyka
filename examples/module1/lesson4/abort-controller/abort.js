@@ -16,11 +16,12 @@ button2.addEventListener('click', async () => {
     loaderEl2.classList.remove('hidden');
     console.log('Nowe zapytanie...');
     ctrl = new AbortController();
-    const {
-      data: { users },
-    } = await axios.get('http://localhost:3000/api/data/users?timeout=2000', {
-      signal: ctrl.signal,
-    });
+    const { data: users } = await axios.get(
+      'http://localhost:3000/api/data/users?timeout=2000',
+      {
+        signal: ctrl.signal,
+      }
+    );
 
     renderUsers(users, contentEl2);
     ctrl = null;
