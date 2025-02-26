@@ -18,54 +18,19 @@ const App = () => {
     }
     ctrl = new AbortController();
 
-    setError(null); // Reset error state when starting a new request
-
     try {
       const { data } = await axios.get(API_URL, {
         signal: ctrl.signal,
       });
-      setUsers(data);
-    } catch (error: unknown) {
-      // Nie ustawiamy błędu jeśli to przerwane żądanie (abort)
-      if (axios.isCancel(error)) {
-        console.log('Request canceled:', error.message);
-        return;
-      }
 
-      // Specjalna obsługa błędów axios
-      if (axios.isAxiosError(error)) {
-        if (error.response) {
-          // Serwer zwrócił odpowiedź z błędem (kod stanu poza zakresem 2xx)
-          setError(
-            `Error ${error.response.status}: ${
-              error.response.data.message || 'Server error'
-            }`
-          );
-        } else if (error.request) {
-          // Żądanie zostało wysłane, ale nie otrzymano odpowiedzi
-          setError(
-            'No response received from server. Please check your connection.'
-          );
-        } else {
-          // Coś poszło nie tak przy konfiguracji żądania
-          setError(`Request error: ${error.message}`);
-        }
-      } else {
-        setError(
-          error instanceof Error ? error.message : 'An unknown error occurred'
-        );
-      }
+      setUsers(data);
+    } catch (error) {
+      setError('Sorry, there seems to be connectivity issues...');
     }
   };
 
   useEffect(() => {
     fetchData();
-
-    // Usuwamy timeout, który bezwarunkowo ustawiał błąd
-    setTimeout(() => {
-      setError('Sorry, there seems to be connectivity issues...');
-      if (ctrl) ctrl.abort();
-    }, 2000);
   }, []);
 
   return (
@@ -75,7 +40,9 @@ const App = () => {
         <div className="flex flex-row items-center">
           {error && (
             <div>
-              <p className="mr-2">{error}</p>
+              <p className="mr-2">
+                Sorry, there seems to be connectivity issues...
+              </p>
               <button
                 onClick={() => fetchData()}
                 className="text-blue-400 bg-blue-200 hover:text-blue-200 hover:bg-blue-400 rounded-md p-4"

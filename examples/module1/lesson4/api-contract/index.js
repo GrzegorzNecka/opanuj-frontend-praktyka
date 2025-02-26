@@ -2,13 +2,13 @@ import axios from 'axios';
 
 const contentEl = document.querySelector('#content');
 const button = document.querySelector('#button');
-
+const API_URL = 'http://localhost:3000/api/data/users';
 button.addEventListener('click', async () => {
   button.innerHTML = 'Pobieram...';
   try {
     const {
       data: { users },
-    } = await axios.get('http://localhost:3000/api/data/users');
+    } = await axios.get(API_URL);
     renderUsers(users, contentEl);
     button.innerHTML = 'Wyszukaj';
   } catch (error) {

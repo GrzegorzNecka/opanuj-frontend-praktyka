@@ -1,4 +1,9 @@
 {
+  "metadata": {
+    "page": 1,
+    "perPage": 10,
+    "total": 100
+  },
   "users": [
     {
       "id": 0,
