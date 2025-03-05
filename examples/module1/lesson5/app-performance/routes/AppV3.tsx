@@ -44,14 +44,12 @@ function Comments() {
   const { commentsAPI } = useLoaderData() as Bootstrap;
 
   useEffect(() => {
-    axios
-      .get<{ comments: Comment[] }>(commentsAPI)
-      .then(({ data: { comments } }) => {
-        dispatch({
-          type: 'SET_COMMENTS',
-          payload: comments,
-        });
+    axios.get<Comment[]>(commentsAPI).then(({ data: comments }) => {
+      dispatch({
+        type: 'SET_COMMENTS',
+        payload: comments,
       });
+    });
   }, []);
 
   return (
@@ -179,11 +177,9 @@ function Articles() {
   const { data: authors } = useAuthorsQuery(authorsAPI);
 
   useEffect(() => {
-    axios
-      .get<{ articles: Article[] }>(articlesAPI)
-      .then(({ data: { articles } }) => {
-        setArticles(articles);
-      });
+    axios.get<Article[]>(articlesAPI).then(({ data: articles }) => {
+      setArticles(articles);
+    });
   }, []);
 
   return (

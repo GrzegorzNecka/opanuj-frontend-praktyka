@@ -16,11 +16,9 @@ function Comments() {
   const { commentsAPI } = useLoaderData() as Bootstrap;
 
   useEffect(() => {
-    axios
-      .get<{ comments: Comment[] }>(commentsAPI)
-      .then(({ data: { comments } }) => {
-        setComments(comments);
-      });
+    axios.get<Comment[]>(commentsAPI).then(({ data: comments }) => {
+      setComments(comments);
+    });
   }, []);
 
   function storeNewComment(e: React.FormEvent<HTMLFormElement>) {
@@ -96,11 +94,9 @@ function Authors() {
   const { authorsAPI } = useLoaderData() as Bootstrap;
 
   useEffect(() => {
-    axios
-      .get<{ authors: Author[] }>(authorsAPI)
-      .then(({ data: { authors } }) => {
-        setAuthors(authors);
-      });
+    axios.get<Author[]>(authorsAPI).then(({ data: authors }) => {
+      setAuthors(authors);
+    });
   }, []);
 
   return (
@@ -134,16 +130,12 @@ function Articles() {
   const { articlesAPI, authorsAPI } = useLoaderData() as Bootstrap;
 
   useEffect(() => {
-    axios
-      .get<{ articles: Article[] }>(articlesAPI)
-      .then(({ data: { articles } }) => {
-        setArticles(articles);
-      });
-    axios
-      .get<{ authors: Author[] }>(authorsAPI)
-      .then(({ data: { authors } }) => {
-        setAuthors(authors);
-      });
+    axios.get<Article[]>(articlesAPI).then(({ data: articles }) => {
+      setArticles(articles);
+    });
+    axios.get<Author[]>(authorsAPI).then(({ data: authors }) => {
+      setAuthors(authors);
+    });
   }, []);
 
   return (
