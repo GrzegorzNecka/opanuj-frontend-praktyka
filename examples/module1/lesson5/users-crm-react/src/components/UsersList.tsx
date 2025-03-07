@@ -1,35 +1,27 @@
-import { useState, useEffect } from 'react';
 import type { User } from '../model/User';
 import { getStatusColor } from '../utils/statusColors';
+import { useQuery } from '@tanstack/react-query';
 
 const UsersList = () => {
-  const [users, setUsers] = useState<User[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  const fetchUsers = async () => {
-    try {
+  const {
+    data: users = [],
+    isLoading,
+    error,
+  } = useQuery({
+    queryKey: ['users'],
+    queryFn: async () => {
       const response = await fetch('http://localhost:3000/api/data/users');
       if (!response.ok) throw new Error('Failed to fetch users');
-      const data = await response.json();
-      setUsers(data);
-    } catch (e) {
-      setError(e instanceof Error ? e.message : 'An error occurred');
-    } finally {
-      setLoading(false);
-    }
-  };
+      return response.json();
+    },
+  });
 
-  useEffect(() => {
-    fetchUsers();
-  }, []);
-
-  if (loading) return <div>Loading users...</div>;
-  if (error) return <div>Error: {error}</div>;
+  if (isLoading) return <div>Loading stats...</div>;
+  if (error) return <div>Error: {(error as Error).message}</div>;
 
   return (
     <div className="grid gap-4" data-testid="users-list">
-      {users.map((user) => (
+      {users.map((user: User) => (
         <div
           key={user.id}
           data-testid="user-item"

@@ -1,28 +1,21 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useMemo } from 'react';
 import type { User } from '../model/User';
 import { getStatusColor } from '../utils/statusColors';
+import { useQuery } from '@tanstack/react-query';
 
 const StatusStats = () => {
-  const [users, setUsers] = useState<User[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  const fetchUsers = async () => {
-    try {
+  const {
+    data: users = [],
+    isLoading,
+    error,
+  } = useQuery({
+    queryKey: ['users'],
+    queryFn: async () => {
       const response = await fetch('http://localhost:3000/api/data/users');
       if (!response.ok) throw new Error('Failed to fetch users');
-      const data = await response.json();
-      setUsers(data);
-    } catch (e) {
-      setError(e instanceof Error ? e.message : 'An error occurred');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchUsers();
-  }, []);
+      return response.json();
+    },
+  });
 
   const statusCounts = useMemo(() => {
     return users.reduce((acc: Record<string, number>, user: User) => {
@@ -31,8 +24,8 @@ const StatusStats = () => {
     }, {});
   }, [users]);
 
-  if (loading) return <div>Loading stats...</div>;
-  if (error) return <div>Error: {error}</div>;
+  if (isLoading) return <div>Loading stats...</div>;
+  if (error) return <div>Error: {(error as Error).message}</div>;
 
   return (
     <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-8">
@@ -50,7 +43,7 @@ const StatusStats = () => {
             >
               {status}
             </span>
-            <span className="text-2xl font-bold">{count}</span>
+            <span className="text-2xl font-bold">{count as number}</span>
           </div>
         </div>
       ))}
