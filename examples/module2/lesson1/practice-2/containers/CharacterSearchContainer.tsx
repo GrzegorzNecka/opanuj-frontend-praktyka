@@ -10,8 +10,9 @@ import { sortCharacters } from '../utils/sortCharacters';
 function CharacterSearchContainer() {
   const [name, setName] = useState('');
   const [gender, setGender] = useState('');
-  const characters = useCharacterSearch(name, gender);
   const [sortOption, setSortOption] = useState('');
+
+  const characters = useCharacterSearch(name, gender);
 
   const sortedCharacters = sortCharacters(characters, sortOption);
 

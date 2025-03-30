@@ -23,6 +23,19 @@ describe('User renderer', () => {
 
     const container = document.createElement('div');
     renderItems(container, users);
+
     expect(Array.from(container.querySelectorAll('li'))).toHaveLength(2);
+  });
+
+  test('should render user details correctly', () => {
+    localStorage.setItem('userRole', 'users');
+
+    const container = document.createElement('div');
+    renderItems(container, users);
+
+    const listItems = container.querySelectorAll('li');
+
+    expect(listItems[0].textContent).toContain('Name: John, Age: 30');
+    expect(listItems[1].textContent).toContain('Name: Jack, Age: 40');
   });
 });
