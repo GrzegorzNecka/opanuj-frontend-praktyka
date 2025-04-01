@@ -1,8 +1,8 @@
 import { describe, test, expect, vi } from 'vitest';
-import { Order } from './types/Order';
+import { type Order } from './types/Order';
 import { handleNewOrder } from './handleNewOrder';
 import { asyncOrderProcessor } from './asyncOrderProcessor';
-import { OrderProcessor } from './types/OrderProcessor';
+import { type OrderProcessor } from './types/OrderProcessor';
 
 describe('order handling', () => {
   test('should reject negative quantity', async () => {

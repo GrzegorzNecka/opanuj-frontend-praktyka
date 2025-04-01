@@ -1,0 +1,10 @@
+---
+description: how to use typescript
+globs: 
+alwaysApply: false
+---
+
+# Your rule content
+   - Zawsze używaj typów, unikaj `any`
+   - Wykorzystuj interfejsy dla złożonych struktur danych
+   - Używaj strict mode w konfiguracji TypeScript

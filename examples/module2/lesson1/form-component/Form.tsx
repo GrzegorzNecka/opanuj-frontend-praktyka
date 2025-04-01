@@ -1,4 +1,4 @@
-import { FormEvent, FormEventHandler, useState } from 'react';
+import { type FormEvent, type FormEventHandler, useState } from 'react';
 import { formValidator } from './validator';
 
 function Form() {

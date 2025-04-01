@@ -1,9 +1,10 @@
 import { test, expect, describe } from 'vitest';
 import { calculateDiscount } from './coupons';
-import { Order } from './types';
+import { type Order } from './types';
 
 describe('Discount calculation', () => {
   test('applies 10% discount for orders over 1000', () => {
+    // arrange
     const order: Order = {
       items: [
         {
@@ -13,7 +14,10 @@ describe('Discount calculation', () => {
         },
       ],
     };
-    expect(calculateDiscount(order)).toBe(10);
+    // act
+    const discount = calculateDiscount(order);
+    // assert
+    expect(discount).toBe(10);
   });
 
   test('applies 5% discount for orders with more than 5 products', () => {
