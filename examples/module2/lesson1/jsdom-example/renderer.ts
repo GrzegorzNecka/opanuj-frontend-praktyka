@@ -14,15 +14,16 @@ function filterUsers(users: User[]): User[] {
 
 export function renderItems(container: HTMLElement, users: User[]): void {
   const allowedUsers = filterUsers(users);
-
+  console.log('allowedUsers', allowedUsers);
   container.innerHTML = `
     <ul>
       ${allowedUsers
         .map(
           (user) =>
-            `<li>${user.role === 'admin' && '(Admin)'} Name: ${
-              user.name
-            }, Age: ${user.age}</li>`
+            `<li>
+          ${user.role === 'admin' && '(Admin)'} Name: ${user.name}, Age: ${
+              user.age
+            }</li>`
         )
         .join('')}
     </ul>
